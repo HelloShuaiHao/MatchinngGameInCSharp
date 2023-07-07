@@ -17,7 +17,8 @@
         @foreach (var animal in shuffledAnimals)
 {
                 <div class="col-3">
-                    <button type="button" class="btn btn-outline-dark">
+                    <button @onclick ="@( ()=> ButtonClick(animal) )" 
+                            type="button" class="btn btn-outline-dark">
                         <h1>@animal</h1>
                     </button>
                 </div>
@@ -25,7 +26,12 @@
     </div>
 </div>
 
+
+
 @code {
+
+    // Display Emoji
+
     List<string> animalEmoji = new List<string>()
     {
         "🐶", "🐶",
@@ -52,5 +58,33 @@
             .OrderBy(item => random.Next())
             .ToList();
     }
+
+
+    // Mouse Click
+
+    string lastAnimalFound = string.Empty;
+
+    private void ButtonClick(string animal)
+    {
+        if(lastAnimalFound == string.Empty) // 在配对中第一次选择
+        {
+            lastAnimalFound = animal;
+        }else if( lastAnimalFound == animal) // 在配对中第二次选择，找到了一样的
+        {
+            lastAnimalFound = string.Empty;
+
+            // Replace found animals with empty string to hide them
+            shuffledAnimals = shuffledAnimals
+                .Select(a => a.Replace(animal, string.Empty))
+                .ToList();
+
+        }else // 没找到
+        {
+            lastAnimalFound = string.Empty;
+        }
+    }
+
+
+
 
 }
